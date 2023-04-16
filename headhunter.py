@@ -25,6 +25,7 @@ def extract_last_page():
   # последняя страница
   return pages[-1]
 
+
 def extract_job(html):
   title = html.find('a').text
   link = html.find('a')['href']
@@ -34,17 +35,17 @@ def extract_job(html):
   location = location.partition(',')[0]
   return {'Заголовок': title, 'Компания': company, 'Расположение': location, 'Ссылка': link}
 
+
 def extract_hh_jobs(last_page):
   jobs = []
   for page in range(last_page):
-    print('Parsing hh.ru page:', page+1)
+    print('Парсинг hh.ru, страница:', page+1)
     result = requests.get(f'{URL}&page={page}', headers=headers)
     soup = BeautifulSoup(result.text, 'lxml')
     results = soup.find_all('div', {'class': 'serp-item'})
     for result in results:
       job = extract_job(result)
       jobs.append(job)
-    
   return jobs
 
 def get_jobs():
