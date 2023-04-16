@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 TEXT = 'Python'  # текст запроса
 URL = f'https://career.habr.com/vacancies?q={TEXT}&type=all'
 MAX_PAGE = 33  
@@ -19,10 +20,11 @@ def extract_job(html):
   info = html.find('div', {'class': 'vacancy-card__meta'}).text
   return {'Заголовок': title, 'Компания': company, 'Информация': info, 'Ссылка': link}
 
+
 def extract_habr_jobs(MAX_PAGE):
   jobs = []
   for page in range(1, MAX_PAGE+1):
-    print('Парсинг career.habr.com страница:', page)
+    print('Парсинг career.habr.com, страница:', page)
     result = requests.get(f'{URL}&page={page}', headers=headers)
     soup = BeautifulSoup(result.text, 'lxml')
     check = soup.find('div', {'class': 'no-content__title'})
@@ -33,6 +35,7 @@ def extract_habr_jobs(MAX_PAGE):
       job = extract_job(result)
       jobs.append(job) 
   return jobs
+  
   
 def get_jobs():
   jobs = extract_habr_jobs(MAX_PAGE)
