@@ -1,8 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 
-ITEMS = 100  #vacancies on a page
-TEXT = 'Python'  #query text
+
+ITEMS = 100  # количество вакансий на странице
+TEXT = 'Python'  # текст запроса
 URL = f'https://hh.ru/search/vacancy?text={TEXT}&order_by=relevance&L_save_area=true&items_on_page={ITEMS}'
 headers = {
 'Host': 'hh.ru',
@@ -12,22 +13,16 @@ headers = {
 'Connection': 'keep-alive'
 }
 
-
 def extract_last_page():
-
   hh_request = requests.get(URL, headers=headers)
-  
   hh_soup = BeautifulSoup(hh_request.text, 'lxml')
-  
   pages = []
-  
-  #page switcher
+  # переключатель страниц
   paginator = hh_soup.find_all("span", {'class': 'pager-item-not-in-short-range'})
 
   for page in paginator:
     pages.append(int(page.find('a').text))
-  
-  #last page
+  # последняя страница
   return pages[-1]
 
 def extract_job(html):
@@ -37,7 +32,7 @@ def extract_job(html):
   company = company.replace(u'\xa0', u' ')
   location = html.find('div', {'data-qa': 'vacancy-serp__vacancy-address'}).text
   location = location.partition(',')[0]
-  return {'title': title, 'company': company, 'location': location, 'link': link}
+  return {'Заголовок': title, 'Компания': company, 'Расположение': location, 'Ссылка': link}
 
 def extract_hh_jobs(last_page):
   jobs = []
